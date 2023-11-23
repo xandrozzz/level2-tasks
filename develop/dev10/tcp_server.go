@@ -7,16 +7,16 @@ import (
 )
 
 func main() {
-	listener, err := net.Listen("tcp", "localhost:4040") // открываем слушающий сокет
+	listener, err := net.Listen("tcp", "localhost:4040")
 	if err != nil {
 		log.Fatalln(err)
 	}
 	for {
-		conn, err := listener.Accept() // принимаем TCP-соединение от клиента и создаем новый сокет
+		conn, err := listener.Accept()
 		if err != nil {
 			continue
 		}
-		go handleClient(conn) // обрабатываем запросы клиента в отдельной го-рутине
+		go handleClient(conn)
 	}
 }
 
@@ -26,16 +26,16 @@ func handleClient(conn net.Conn) {
 		if err != nil {
 			log.Fatalln(err)
 		}
-	}(conn) // закрываем сокет при выходе из функции
+	}(conn)
 
-	buf := make([]byte, 32) // буфер для чтения клиентских данных
+	buf := make([]byte, 32)
 	for {
 		_, err := conn.Write([]byte("data from server, awaiting response from client\n"))
 		if err != nil {
 			log.Fatalln(err)
-		} // пишем в сокет
+		}
 
-		readLen, err := conn.Read(buf) // читаем из сокета
+		readLen, err := conn.Read(buf)
 		if err != nil {
 			fmt.Println(err)
 			break
@@ -46,6 +46,6 @@ func handleClient(conn net.Conn) {
 		_, err = conn.Write(append([]byte("got from client:"), buf[:readLen]...))
 		if err != nil {
 			log.Fatalln(err)
-		} // пишем в сокет
+		}
 	}
 }
